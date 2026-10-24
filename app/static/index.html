@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA | UAV Mission Safety Simulator</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">A STUDENT PROJECT · SOFTWARE SIMULATION ONLY</p>
+          <h1>AURORA <span class="title-subtitle">Drone Mission Simulator</span></h1>
+        </div>
+        <div class="status-cluster">
+          <span id="state-pill" class="pill info">IDLE</span>
+          <span id="telemetry-status" class="pill muted">Telemetry live</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel hero-panel" id="welcome-panel">
+          <div class="welcome-copy">
+            <p class="eyebrow">THE IDEA IN PLAIN ENGLISH</p>
+            <h2>If a simulated drone has a problem, can it retrace the places it has already visited?</h2>
+            <p>
+              This website lets you watch a pretend drone follow a route, remember each stop it reaches,
+              and turn back through those remembered stops when you press <strong>Abort mission</strong>.
+              It is an educational software simulation—not a real drone controller or proof of real-world safety.
+            </p>
+            <div class="plain-analogy">
+              <strong>Think of it like a walk with a shopping list:</strong>
+              the Queue is the list of places still to visit; the Stack is the trail of places already reached.
+              If the walk is interrupted, retrace that trail in reverse.
+            </div>
+            <div class="button-row">
+              <button class="primary" id="start-demo-btn">Show me how it works</button>
+              <button class="secondary" id="explore-btn">Open the simulator</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel guided-panel hidden" id="guided-panel">
+          <div class="guided-header">
+            <div>
+              <p class="eyebrow">FOLLOW THESE SIMPLE STEPS</p>
+              <h3 id="guided-title">Understand the mission</h3>
+            </div>
+            <div class="progress-bar"><span id="guided-progress"></span></div>
+          </div>
+          <p id="guided-description"></p>
+          <div class="button-row">
+            <button class="secondary" id="back-btn">Back</button>
+            <button class="primary" id="continue-btn">Continue</button>
+            <button class="secondary danger" id="restart-demo-btn">Restart</button>
+          </div>
+        </section>
+
+        <section class="panel dashboard-panel">
+          <div class="telemetry-grid">
+            <div class="metric"><label>What is happening?</label><strong id="mission-state">Waiting to start</strong></div>
+            <div class="metric"><label>Drone's simulated location</label><strong id="position-readout">(0,0)</strong></div>
+            <div class="metric"><label>Next place to visit</label><strong id="waypoint-readout">-</strong></div>
+            <div class="metric"><label>Stops completed</label><strong id="progress-readout">0%</strong></div>
+            <div class="metric"><label>Home / starting point</label><strong id="base-readout">(0,0)</strong></div>
+            <div class="metric"><label>Simulation refresh speed</label><strong id="rate-readout">30 Hz</strong></div>
+          </div>
+          <p class="plain-hint">Start the mission, wait until the drone reaches a few green checkpoints, then press Abort mission to watch it retrace its visited route.</p>
+          <div class="control-row">
+            <button class="primary" id="start-btn">Start mission</button>
+            <button class="danger" id="abort-btn">Abort mission</button>
+            <button class="secondary" id="reset-btn">Start over</button>
+          </div>
+        </section>
+
+        <section class="panel canvas-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Route map</h3>
+              <p class="panel-caption">The red dot is the simulated drone. The lines show planned, visited, and return routes.</p>
+            </div>
+            <div class="legend">
+              <span><i class="dot planned"></i>still planned</span>
+              <span><i class="dot verified"></i>already visited</span>
+              <span><i class="dot rollback"></i>returning home</span>
+              <span><i class="dot emergency"></i>drone</span>
+            </div>
+          </div>
+          <canvas id="radar-canvas" width="900" height="520"></canvas>
+        </section>
+
+        <section class="panel inspectors-panel">
+          <div class="inspector">
+            <div class="panel-header">
+              <div><h3>Places still to visit <span class="tech-label">(Queue)</span></h3><p class="panel-caption">Like a to-do list: the first place listed is next.</p></div>
+              <span id="queue-size" class="badge">0</span>
+            </div>
+            <ol id="queue-list" class="data-list"></ol>
+          </div>
+          <div class="inspector">
+            <div class="panel-header">
+              <div><h3>Places already reached <span class="tech-label">(Stack)</span></h3><p class="panel-caption">On abort, the latest visited place is the first return stop.</p></div>
+              <span id="stack-size" class="badge">0</span>
+            </div>
+            <ol id="stack-list" class="data-list"></ol>
+          </div>
+        </section>
+
+        <section class="panel event-panel">
+          <div class="panel-header">
+            <div><h3>What just happened?</h3><p class="panel-caption">A time-ordered explanation of the simulator's actions.</p></div>
+          </div>
+          <ul id="event-log" class="event-log"></ul>
+        </section>
+
+        <section class="panel explain-panel">
+          <p class="eyebrow">A SIMPLE WAY TO EXPLAIN THIS PROJECT</p>
+          <h3>What should I tell my faculty?</h3>
+          <blockquote>
+            “This is a website that simulates a drone following a list of destinations. It records a checkpoint only after reaching a destination.
+            If I trigger an emergency, it stops taking new destinations and returns through the checkpoints in reverse order.
+            I built it to demonstrate a Queue, a Stack, and safe software state transitions. It is a simulation, not real flight-control software.”
+          </blockquote>
+          <div class="concept-grid">
+            <div><strong>Queue = upcoming plan</strong><span>Destinations are handled in the order they were added.</span></div>
+            <div><strong>Stack = visited trail</strong><span>The newest reached checkpoint is the first one used on the way back.</span></div>
+            <div><strong>Abort = stop and retrace</strong><span>Pending destinations are cleared; already reached checkpoints remain available for rollback.</span></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
