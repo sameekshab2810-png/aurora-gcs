@@ -49,6 +49,19 @@ pytest -q
 
 ## Deployment
 
+### Quick deploy to Render
+
+1. Open the [AURORA Render deployment page](https://render.com/deploy?repo=https://github.com/sameekshab2810-png/aurora-gcs).
+2. Sign in to Render (or create an account), review the service settings, then select **Deploy Blueprint**.
+3. Wait for Render to finish building and starting the service. Copy the generated `onrender.com` URL and open it to show the website.
+4. Check that `<your-service-url>/api/health` returns `{"status":"ok"}`.
+
+The included `render.yaml` installs `requirements.txt`, starts Uvicorn on Render's `PORT`, and configures `/api/health` as the health check. Render account authorization and the final public URL must be completed by the account owner; no deployed URL is claimed here.
+
+Free hosting may sleep when idle and can take a short time to wake up. Allow the service to finish its first build before presenting.
+
+### Other Python hosts
+
 Use Render or Railway with a Python web service and the command:
 
 ```bash
